@@ -18,6 +18,7 @@ class ImportData:
 		self.TN_files = ['../data/c_tn.csv', '../data/NDF_TN_curie.csv']
 		self.node_vec_file = '../data/rel_large_2_1.emb.tar.gz'
 		self.map_df_file = '../data/map.csv'
+		self.cutoff = 2  # include semmeddb stuff if it has at least this many associated publications
 
 	def import_data(self):
 		"""
@@ -54,7 +55,7 @@ class ImportData:
 		for TP in TP_list:
 			for row in range(len(TP)):
 				if 'count' in list(TP):
-					if int(TP['count'][row]) < 2:
+					if int(TP['count'][row]) < self.cutoff:
 						continue
 				try:
 					source_id = map_dict[TP['source'][row]]

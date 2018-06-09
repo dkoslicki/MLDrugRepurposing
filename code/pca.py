@@ -19,15 +19,13 @@ np.random.seed(int(time.time()/100))
 # Choose the data you want to run it on
 
 # SemmedDB
-ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
-ImportData.TN_files = ['../data/c_tn.csv']
+#ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
+#ImportData.TN_files = ['../data/c_tn.csv']
 
 # SemmedDB plus NDF, do nothing
 
 # Import the data
 X, y, id_list = ImportData.import_data()
-print(len(X))
-print(len(y))
 print(np.unique(y, return_counts=True))
 
 fig = plt.figure(1, figsize=(4, 3))
