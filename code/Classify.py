@@ -24,14 +24,16 @@ np.random.seed(int(time.time()/100))
 # Choose the data you want to run it on
 
 # SemmedDB
-#ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
-#ImportData.TN_files = ['../data/c_tn.csv']
+ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
+ImportData.TN_files = ['../data/c_tn.csv']
 
 # SemmedDB plus NDF, do nothing
 
 # Just NDF
-ImportData.TP_files = ['../data/NDF_TP_curie.csv']
-ImportData.TN_files = ['../data/NDF_TN_curie.csv']
+#ImportData.TP_files = ['../data/NDF_TP_curie.csv']
+#ImportData.TN_files = ['../data/NDF_TN_curie.csv']
+
+ImportData.cutoff = 3
 
 # Import the data
 X, y, id_list = ImportData.import_data()
@@ -45,7 +47,7 @@ print(np.unique(y, return_counts=True))
 
 #model = GaussianNB()
 
-model = RandomForestClassifier(class_weight='balanced', n_estimators=10, max_depth=10)  # Doesn't over-fit with max_depth=5 and just semmeddb data
+model = RandomForestClassifier(class_weight='balanced', n_estimators=100, max_depth=10)  # Doesn't over-fit with max_depth=5 and just semmeddb data
 
 #model = VotingClassifier(estimators=[('lr', model1), ('gnb', model2), ('rf', model3)], voting='soft')
 
@@ -59,6 +61,7 @@ plot_learning_curve(model, "Learning curve", X, y, ylim=(0.7, 1.01), cv=cv, n_jo
 
 
 # Plot the ROC curve
+plt.figure()
 tprs = []
 aucs = []
 f1s = []
