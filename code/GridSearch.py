@@ -28,12 +28,20 @@ np.random.seed(int(time.time()/100))
 X, y, id_list = ImportData.import_data()
 
 model = RandomForestClassifier(class_weight='balanced')
-param_grid = {'n_estimators': [10, 50, 100, 1000],
-			'max_features': ['auto', 10, 25, 50, 100],
-			'max_depth': [10, 20, 50],
-			'min_samples_split': [2, 10, 50, 100],
-			'min_samples_leaf': [1, 10, 100, 1000],
+#param_grid = {'n_estimators': [10, 50, 100, 1000],
+#			'max_features': ['auto', 10, 25, 50, 100],
+#			'max_depth': [10, 20, 50],
+#			'min_samples_split': [2, 10, 50, 100],
+#			'min_samples_leaf': [1, 10, 100, 1000],
+#			}
+
+param_grid = {'n_estimators': [10, 50],
+			'max_features': ['auto', 10],
+			'max_depth': [10],
+			'min_samples_split': [2],
+			'min_samples_leaf': [1],
 			}
+
 
 clf = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=cv, verbose=100)
 
