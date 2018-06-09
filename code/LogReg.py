@@ -8,134 +8,59 @@ import sklearn.externals as ex
 import sklearn.metrics as met
 import sklearn.model_selection as ms
 import time
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import VotingClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from PlotLearningCurve import plot_learning_curve
+import numpy as np
+import ImportData
+ImportData = ImportData.ImportData()
 
-
-
+# Initialize a random state
 random_state = np.random.RandomState(int(time.time()))
 np.random.seed(int(time.time()/100))
-#random_state = np.random.RandomState(11235813)
-#np.random.seed(112358)
 
-try:
-    node_vec = pd.read_csv('/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/rel_large_2_1.emb', sep = ' ', skiprows=1, header = None, index_col=None)
-    map_df = pd.read_csv('/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/map.csv', index_col=None)
-except FileNotFoundError:
-    node_vec = pd.read_csv('rel_large_1_4.emb', sep = ' ', skiprows=1, header = None, index_col=None)
-    map_df = pd.read_csv('map.csv', index_col=None)
+# Choose the data you want to run it on
+ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
+ImportData.TN_files = ['../data/c_tn.csv']
 
+# Import the data
+X, y = ImportData.import_data()
+print(len(X))
+print(len(y))
+print(np.unique(y, return_counts=True))
 
-node_vec = node_vec.sort_values(0).reset_index(drop=True)
-
-#print(node_vec)
-#print(map_df)
-
-map_dict = {}
-
-for row in range(len(map_df)):
-    map_dict[map_df['curie'][row]] = map_df['id'][row]
-
-try:
-    TP = pd.read_csv('/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/c_drug_treats_disease.csv',index_col=None)
-    TN = pd.read_csv('/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/c_tn.csv',index_col=None)
-except FileNotFoundError:
-    TP = pd.read_csv('c_drug_treats_disease.csv',index_col=None)
-    TN = pd.read_csv('c_tn.csv',index_col=None)
-
-y = []
-X = []
-
-y1 = []
-X1 = []
-
-y2 = []
-X2 = []
-
-c = 0
-
-id_list = []
-
-TP_flag = 'count' in list(TP)
-TN_flag = 'count' in list(TN)
-
-for row in range(len(TP)):
-    if TP_flag:
-        if int(TP['count'][row]) < 3:
-            continue
-    try:
-        source_id = map_dict[TP['source'][row]]
-        target_id = map_dict[TP['target'][row]]
-        id_list += [source_id, target_id]
-    except KeyError:
-        c += 1
-        continue
-
-    X1 += [list(node_vec.iloc[source_id,1:]) + list(node_vec.iloc[target_id,1:])]
-    y1 += [1]
-
-print(len(y1))
-
-for row in range(len(TN)):
-    if TN_flag:
-        if int(TN['count'][row]) < 3:
-            continue
-    try:
-        source_id = map_dict[TN['source'][row]]
-        target_id = map_dict[TN['target'][row]]
-        id_list += [source_id, target_id]
-    except KeyError:
-        c += 1
-        continue
-
-    X2 += [list(node_vec.iloc[source_id,1:]) + list(node_vec.iloc[target_id,1:])]
-    y2 += [0]
-
-print(len(y2))
-
-#u_subset = np.random.choice(np.arange(len(y1)), len(y2), replace = False)
-#o_subset = np.random.choice(np.arange(len(y2)), len(y1), replace = True)
-
-X1 = np.array(X1)
-y1 = np.array(y1)
-X2 = np.array(X2)
-y2 = np.array(y2)
-X = np.concatenate((X1,X2))
-y = np.concatenate((y1,y2))
-
+# Choose the model you want to use
 model = lm.LogisticRegression(class_weight='balanced', C=.5)
 
-from sklearn.naive_bayes import GaussianNB
 #model = GaussianNB()
 
-from sklearn.ensemble import RandomForestClassifier
 #model = RandomForestClassifier(class_weight='balanced', n_estimators=10, max_depth=5)  # Doesn't over-fit
 
-from sklearn.ensemble import VotingClassifier
 #model = VotingClassifier(estimators=[('lr', model1), ('gnb', model2), ('rf', model3)], voting='soft')
 
 #model = skl.linear_model.LogisticRegressionCV(class_weight='balanced', n_jobs=-1)
 
-from sklearn.ensemble import AdaBoostClassifier
 #model = AdaBoostClassifier(n_estimators=100)
 
+# for the cross fold validation
 cv = ms.StratifiedKFold(n_splits=10, random_state=random_state, shuffle=True)
 
-from PlotLearningCurve import plot_learning_curve
-import numpy as np
+# Plot the learning curve
 plot_learning_curve(model, "Learning curve", X, y, ylim=(0.7, 1.01), cv=cv, n_jobs=-1, shuffle=True)
 
+
+# Plot the ROC curve
 tprs = []
 aucs = []
 f1s = []
 mean_fpr = np.linspace(0, 1, 100)
-
 i = 0
-
 shuffled_idx = np.arange(len(y))
 np.random.shuffle(shuffled_idx)
-
 test_f1_mean = np.mean(ms.cross_val_score(model, X[shuffled_idx], y[shuffled_idx], cv=10, n_jobs=-1, scoring='f1'))
 print('using cross val score F1 = %0.4f' % (test_f1_mean))
-
 for train, test in cv.split(X, y):
     model_i = model.fit(X[train], y[train])
     probas_ = model_i.predict_proba(X[test])

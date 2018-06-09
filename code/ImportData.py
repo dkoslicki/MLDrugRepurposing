@@ -14,10 +14,10 @@ np.random.seed(int(time.time()/100))
 
 class ImportData:
 	def __init__(self):
-		self.TP_files = ['/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/c_drug_treats_disease.csv', '/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/NDF_TP_curie.csv']
-		self.TN_files = ['/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/c_tn.csv', '/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/NDF_TN_curie.csv']
-		self.node_vec_file = '/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/rel_large_2_1.emb'
-		self.map_df_file = '/home/dkoslicki/Desktop/RTX/FinnStuff/snap/snap-master/examples/node2vec/LogReg/map.csv'
+		self.TP_files = ['../data/c_drug_treats_disease.csv', '../data/NDF_TP_curie.csv']
+		self.TN_files = ['../data/c_tn.csv', '../data/NDF_TN_curie.csv']
+		self.node_vec_file = '../data/rel_large_2_1.emb.tar.gz'
+		self.map_df_file = '../data/map.csv'
 
 	def import_data(self):
 		"""
@@ -34,7 +34,7 @@ class ImportData:
 		for file in self.TN_files:
 			TN_list.append(pd.read_csv(file, index_col=None))
 
-		node_vec = pd.read_csv(self.node_vec_file, sep=' ', skiprows=1, header = None, index_col=None)
+		node_vec = pd.read_csv(self.node_vec_file, compression='gzip', sep=' ', skiprows=1, header=None, index_col=None)
 		map_df = pd.read_csv(self.map_df_file, index_col=None)
 
 		node_vec = node_vec.sort_values(0).reset_index(drop=True)
