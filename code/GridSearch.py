@@ -3,6 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import ImportData
 from sklearn.model_selection import GridSearchCV
+import sklearn.model_selection as ms
 
 ImportData = ImportData.ImportData()
 
@@ -42,6 +43,7 @@ param_grid = {'n_estimators': [10, 50],
 			'min_samples_leaf': [1],
 			}
 
+cv = ms.StratifiedKFold(n_splits=10, random_state=random_state, shuffle=True)
 
 clf = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=cv, verbose=100)
 
