@@ -22,27 +22,30 @@ random_state = np.random.RandomState(int(time.time()))
 np.random.seed(int(time.time()/100))
 
 # Choose the data you want to run it on
-ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
-ImportData.TN_files = ['../data/c_tn.csv']
+
+# SemmedDB
+#ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
+#ImportData.TN_files = ['../data/c_tn.csv']
+
+# SemmedDB plus NDF, do nothing
 
 # Import the data
-X, y = ImportData.import_data()
+X, y, id_list = ImportData.import_data()
 print(len(X))
 print(len(y))
 print(np.unique(y, return_counts=True))
 
 # Choose the model you want to use
-model = lm.LogisticRegression(class_weight='balanced', C=.5)
+#model = lm.LogisticRegression(class_weight='balanced', C=.5)
+#model = skl.linear_model.LogisticRegressionCV(class_weight='balanced', n_jobs=-1)
 
 #model = GaussianNB()
 
-#model = RandomForestClassifier(class_weight='balanced', n_estimators=10, max_depth=5)  # Doesn't over-fit
+#model = RandomForestClassifier(class_weight='balanced', n_estimators=10, max_depth=10)  # Doesn't over-fit
 
 #model = VotingClassifier(estimators=[('lr', model1), ('gnb', model2), ('rf', model3)], voting='soft')
 
-#model = skl.linear_model.LogisticRegressionCV(class_weight='balanced', n_jobs=-1)
-
-#model = AdaBoostClassifier(n_estimators=100)
+model = AdaBoostClassifier(n_estimators=100)
 
 # for the cross fold validation
 cv = ms.StratifiedKFold(n_splits=10, random_state=random_state, shuffle=True)

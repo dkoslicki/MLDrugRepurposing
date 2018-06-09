@@ -24,7 +24,7 @@ class ImportData:
 		Import the true positives and true negatives into a form usable by sklearn
 		:param TP_files: list of csv file names
 		:param TN_files: list of csv file name
-		:return: (X, y) vectors (features, classes)
+		:return: (X, y, id_list) vectors (features, classes, ids)
 		"""
 		TP_list = []
 		for file in self.TP_files:
@@ -94,4 +94,4 @@ class ImportData:
 		X = np.concatenate((X1,X2))
 		y = np.concatenate((y1,y2))
 
-		return X,y
+		return X, y, id_list
