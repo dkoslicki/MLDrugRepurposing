@@ -22,8 +22,8 @@ np.random.seed(int(time.time()/100))
 # Choose the data you want to run it on
 
 # SemmedDB
-ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
-ImportData.TN_files = ['../data/c_tn.csv']
+#ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
+#ImportData.TN_files = ['../data/c_tn.csv']
 
 # SemmedDB plus NDF, do nothing
 
@@ -45,7 +45,11 @@ print(np.unique(y, return_counts=True))
 
 #model = GaussianNB()
 
-model = RandomForestClassifier(class_weight='balanced', n_estimators=100, max_depth=10)  # Doesn't over-fit with max_depth=5 and just semmeddb data
+#model = RandomForestClassifier(class_weight='balanced', n_estimators=100, max_depth=10)  # Doesn't over-fit with max_depth=5 and just semmeddb data
+# {'n_estimators': 200, 'max_depth': None, 'min_samples_split': 2, 'max_features': 100, 'max_leaf_nodes': None, 'min_samples_leaf': 1}
+#model = RandomForestClassifier(class_weight='balanced', max_depth=None, max_leaf_nodes=None, n_estimators=200, min_samples_leaf=1, min_samples_split=2, max_features=100)
+model = RandomForestClassifier(class_weight='balanced', max_depth=15, max_leaf_nodes=None, n_estimators=200, min_samples_leaf=1, min_samples_split=2, max_features=100)
+
 
 #model = VotingClassifier(estimators=[('lr', model1), ('gnb', model2), ('rf', model3)], voting='soft')
 

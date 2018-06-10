@@ -66,7 +66,7 @@ class ImportData:
 		for TN in TN_list:
 			for row in range(len(TN)):
 				if 'count' in list(TN):
-					if int(TN['count'][row]) < 2:
+					if int(TN['count'][row]) < self.cutoff:
 						continue
 				try:
 					source_id = map_dict[TN['source'][row]]

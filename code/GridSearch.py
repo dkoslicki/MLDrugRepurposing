@@ -72,3 +72,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 y_true, y_pred = y_test, clf.predict(X_test)
 print(classification_report(y_true, y_pred))
 print()
+
+"""
+[CV]  max_depth=None, max_leaf_nodes=None, n_estimators=200, min_samples_leaf=1, min_samples_split=2, max_features=100, score=0.9243212016175621
+
+"""
