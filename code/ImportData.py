@@ -38,12 +38,14 @@ class ImportData:
 		for row in range(len(map_df)):
 			map_dict[map_df['curie'][row]] = map_df['id'][row]
 
-		X1 = []
-		X2 = []
+		X_TP = []
+		X_TN = []
 
 		c = 0
 
 		id_list = []
+		id_list_dict = dict()
+		curie_list = []
 
 		for TP in TP_list:
 			for row in range(len(TP)):
@@ -53,15 +55,19 @@ class ImportData:
 				try:
 					source_id = map_dict[TP['source'][row]]
 					target_id = map_dict[TP['target'][row]]
+					source_curie = TP['source'][row]
+					target_curie = TP['target'][row]
 				except KeyError:
 					c += 1
 					continue
 
-				if [source_id, target_id] not in id_list:
+				if (source_id, target_id) not in id_list_dict:
 					id_list += [[source_id, target_id]]
-					X1 += [list(node_vec.iloc[source_id,1:]) + list(node_vec.iloc[target_id,1:])]
+					id_list_dict[source_id, target_id] = 1
+					curie_list += [[source_curie, target_curie]]
+					X_TP += [list(node_vec.iloc[source_id, 1:]) + list(node_vec.iloc[target_id, 1:])]
 
-		y1 = [1]*len(X1)
+		y_TP = [1]*len(X_TP)
 
 		for TN in TN_list:
 			for row in range(len(TN)):
@@ -71,21 +77,24 @@ class ImportData:
 				try:
 					source_id = map_dict[TN['source'][row]]
 					target_id = map_dict[TN['target'][row]]
+					source_curie = TN['source'][row]
+					target_curie = TN['target'][row]
 				except KeyError:
 					c += 1
 					continue
 
-				if [source_id, target_id] not in id_list:
+				if (source_id, target_id) not in id_list_dict:
 					id_list += [[source_id, target_id]]
-					X2 += [list(node_vec.iloc[source_id,1:]) + list(node_vec.iloc[target_id,1:])]
+					id_list_dict[source_id, target_id] = 1
+					curie_list += [[source_curie, target_curie]]
+					X_TN += [list(node_vec.iloc[source_id, 1:]) + list(node_vec.iloc[target_id, 1:])]
 
-		y2 = [0]*len(X2)
+		y_TN = [0]*len(X_TN)
 
-		X1 = np.array(X1)
-		y1 = np.array(y1)
-		X2 = np.array(X2)
-		y2 = np.array(y2)
-		X = np.concatenate((X1,X2))
-		y = np.concatenate((y1,y2))
-
-		return X, y, id_list
+		X_TP = np.array(X_TP)
+		y_TP = np.array(y_TP)
+		X_TN = np.array(X_TN)
+		y_TN = np.array(y_TN)
+		X = np.concatenate((X_TP,X_TN))
+		y = np.concatenate((y_TP,y_TN))
+		return X, y, id_list, curie_list

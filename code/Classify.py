@@ -22,8 +22,8 @@ np.random.seed(int(time.time()/100))
 # Choose the data you want to run it on
 
 # SemmedDB
-#ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
-#ImportData.TN_files = ['../data/c_tn.csv']
+ImportData.TP_files = ['../data/c_drug_treats_disease.csv']
+ImportData.TN_files = ['../data/c_tn.csv']
 
 # SemmedDB plus NDF, do nothing
 
@@ -31,10 +31,10 @@ np.random.seed(int(time.time()/100))
 #ImportData.TP_files = ['../data/NDF_TP_curie.csv']
 #ImportData.TN_files = ['../data/NDF_TN_curie.csv']
 
-ImportData.cutoff = 3
+ImportData.cutoff = 0
 
 # Import the data
-X, y, id_list = ImportData.import_data()
+X, y, id_list, curie_list = ImportData.import_data()
 print(len(X))
 print(len(y))
 print(np.unique(y, return_counts=True))
