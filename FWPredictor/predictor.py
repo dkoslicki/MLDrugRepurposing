@@ -77,9 +77,9 @@ class predictor():
         df_all = self.build_pred_df_all()
         print(df_all)
 
-if __name__ == '__main__':
-	pr = predictor()
-	pr.test()
+#if __name__ == '__main__':
+#	pr = predictor()
+#	pr.test()
 
 
 
