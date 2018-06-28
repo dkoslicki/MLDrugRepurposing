@@ -15,7 +15,7 @@ class predictor():
     def predict(self, X):
         return self.model.predict(X)
 
-    def import_file(self, file, graph_file = 'rel_max.emb', map_file = 'map.csv'):
+    def import_file(self, file, graph_file = 'rel_max.emb.gz', map_file = 'map.csv'):
         graph = pd.read_csv(graph_file, sep = ' ', skiprows=1, header = None, index_col=None)
         self.graph = graph.sort_values(0).reset_index(drop=True)
         self.map_df = pd.read_csv(map_file, index_col=None)
