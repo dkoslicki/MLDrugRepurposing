@@ -1,16 +1,6 @@
 import pandas as pd
 import numpy as np
-import scipy as sci
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import sklearn as skl
-import sklearn.linear_model as lm
-import sklearn.externals as ex
-import sklearn.metrics as met
-import sklearn.model_selection as ms
-import time
 from sklearn.externals import joblib
-from sklearn.ensemble import RandomForestClassifier
 
 class predictor():
 
